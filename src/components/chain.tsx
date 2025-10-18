@@ -24,12 +24,13 @@ const ChainItem: FC<Props> = (props) => {
         variant="ghost"
       >
         <Image
-          width={20}
-          height={20}
+          width={40}
+          height={40}
           src={chain.logo || "https://via.placeholder.com/150"}
           alt={chain.display_name}
-          className={`h-10 w-10 rounded-full transition-all ${isDisabled ? "filter grayscale brightness-10" : ""
+          className={`rounded-full transition-all ${isDisabled ? "filter grayscale brightness-10" : ""
             }`}
+          style={{ width: 'auto', height: 'auto' }}
         />
       </PromiseButton>
       <div

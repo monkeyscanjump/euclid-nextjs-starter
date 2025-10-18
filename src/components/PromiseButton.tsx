@@ -9,7 +9,7 @@ interface Props extends ButtonProps {
     onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void | Promise<void>
 }
 
-const PromiseButton = React.forwardRef<any, Props>(function PromiseButton(props, ref) {
+const PromiseButton = React.forwardRef<HTMLButtonElement, Props>(function PromiseButton(props, ref) {
     const { children, onClick, disabled, isLoading, replaceChildrenOnLoading = false, ...buttonProps } = props;
     const [loading, setLoading] = useState(false);
 
@@ -21,7 +21,7 @@ const PromiseButton = React.forwardRef<any, Props>(function PromiseButton(props,
         } finally {
             setLoading(false);
         }
-    }, [onClick])
+    }, [onClick, loading]);
 
     const loadingState = loading || isLoading
     return (

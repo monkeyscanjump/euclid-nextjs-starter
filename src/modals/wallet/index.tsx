@@ -6,7 +6,7 @@ import {
 } from "@/src/zustand/wallet";
 import { useCodegenGeneratedChainsAllChainsQuery } from "@euclidprotocol/graphql-codegen/dist/src/react";
 import { useWalletModalStore } from "./state";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/src/components/ui/dialog";
+import { Modal } from "@/src/components/ui/modal";
 import ChainItem from "@/src/components/chain";
 
 function WalletModal() {
@@ -16,7 +16,6 @@ function WalletModal() {
     const { data: chains } = useCodegenGeneratedChainsAllChainsQuery({
         variables: {},
     });
-
 
     const handleConnect = async (chain_uid: string) => {
         try {
@@ -32,29 +31,25 @@ function WalletModal() {
     );
 
     return (
-        <Dialog open={isModalOpen} onOpenChange={onModalStateChange}>
-            <DialogContent>
-                <DialogHeader>
-                    <DialogTitle>Select Chain</DialogTitle>
-                    <DialogDescription>
-                        <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mt-4 overflow-auto">
-                            {filteredChains?.map((chain) => (
-                                <>
-                                    {chain.factory_address != "" && (
-                                        <ChainItem
-                                            key={chain.chain_uid}
-                                            chain={chain}
-                                            selected={chain.chain_uid === connectedChain?.chain_uid}
-                                            onClick={() => handleConnect(chain.chain_uid)}
-                                        />
-                                    )}
-                                </>
-                            ))}
-                        </div>
-                    </DialogDescription>
-                </DialogHeader>
-            </DialogContent>
-        </Dialog>
+        <Modal
+            open={isModalOpen}
+            onOpenChange={onModalStateChange}
+            title="Select Chain"
+            description="Choose a blockchain network to connect your wallet."
+        >
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 p-1">
+                {filteredChains?.map((chain) =>
+                    chain.factory_address !== "" && (
+                        <ChainItem
+                            key={chain.chain_uid}
+                            chain={chain}
+                            selected={chain.chain_uid === connectedChain?.chain_uid}
+                            onClick={() => handleConnect(chain.chain_uid)}
+                        />
+                    )
+                )}
+            </div>
+        </Modal>
     );
 }
 
