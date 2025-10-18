@@ -24,6 +24,7 @@ export interface IWalletStore {
     isConnected: boolean;
     isLoading: boolean;
     wallet?: Key;
+    address?: string;
     config?: IKeplr;
     chain?: {
         chain_uid: string;
@@ -156,6 +157,7 @@ export const connectClient = async (
             isConnected: true,
             isLoading: false,
             wallet: walletKey,
+            address: walletKey.bech32Address,
             config: config,
             autoconnect: true,
             chain: {
@@ -186,6 +188,7 @@ export const disconnectClient = () => {
         isConnected: false,
         client: undefined,
         wallet: undefined,
+        address: undefined,
         autoconnect: false,
         config: undefined,
         chain: undefined,
@@ -220,7 +223,10 @@ export const signAndBroadcastExecute = async (
     memo?: string
 ) => {
     const { client } = useWalletStore.getState();
-    const encodedMsgs: EncodeObject[] = msgs.map((msg) => client!.encodeExecuteMsg(msg.contractAddress, msg.msg, [...msg.funds ?? []]));
+    const encodedMsgs: EncodeObject[] = msgs.map((msg) => {
+        const funds = Array.isArray(msg.funds) ? msg.funds : [];
+        return client!.encodeExecuteMsg(msg.contractAddress, msg.msg, funds);
+    });
     return client!.signAndBroadcast(
         encodedMsgs,
         "auto",
